@@ -1,0 +1,12 @@
+Linux standard base 
+
+
+C est la norme plus precisement des linux (posix pour les unix)
+
+Debian, red hat, ubuntu
+
+
+
+- format de fichier ELF
+- standard emplacement de fichier  FHS
+- biblio standards : glibc, PAM, zlib 

@@ -1,0 +1,29 @@
+
+
+Norme pour le premier UNIX,  pour uniformiser le fonctionnement des programmes 
+entre les differents OS
+
+
+Criteres : 
+
+- Libc avec lees headers generaux : stdio.h>, <unistd.h>, ou <pthread.h> par ex.
+- support de pthread POSIX thread
+- signaux et processus UNIX (fork, exec, wait)
+- Shell qui respecte la syntaxe BOURNE SHELL (sh) ou Bash (Bourne again shell, [borne again] fonde dessus)
+
+
+bash (par GNU) = auto complete. historique persistant, caclul integre sans expr neede $((1+1))
+
+
+
+
+- Commandes obligatoires : ls, cp, mv, grep, sed, awk, find, pax
+
+- hierarchie de fichier : presecne de /dev, /tmp, /bin (choix perso du temps de suppr du /tmp)
+- system de perms de linux 777
+
+- variable d env, PATH, HOME, LOGNAME
+- locale C/POSIX = Ascii 7 bits, formatage de daye USA.  
+
+
+
