@@ -1,0 +1,11 @@
+
+
+hierarchie de filesystem standard : 
+
+
+
+Dans /usr les gros paquetes (src, bin, lib etc)
+dans /var les variable (tmp, run, log etc)
+
+
+les /bin /mnt / root /home a la racine / 

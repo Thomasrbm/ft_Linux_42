@@ -1,0 +1,29 @@
+Toolchain = l'ensemble des outils qui permettent de compiler du code
+
+
+
+
+gcc → le compilateur
+binutils → l'assembleur, le linker
+glibc → la bibliothèque C standard
+
+
+
+
+
+quand gcc compile il use un chemin absolue.  
+sur ubuntu   => /lib/x86_64-linux-gnu/libc.so.6
+
+
+
+mais lfs veut => /lib/libc.so.6
+
+
+
+
+
+car le but etant d avoir SA distro. on enlevera ubunut/debian et on aura plus que lfs.
+
+
+ 
+donc recompiller un   gcc + binutils + glibc  =  /lib/libc.so.6   pour own lfs

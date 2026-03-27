@@ -1,0 +1,16 @@
+
+
+
+
+
+
+Grub stage 1 dans le MBR (historique les 512 octets du premier SDA)  => lance grub stage 2 
+
+
+/boot/grub/  grub stage 2  =>  affiche le menu grub =>  lance le vmlinuz (kernel compressed)  (mtn c est EFI qui gere tout plus de MBR reel)  + initrd (monte les driver  kernel) + les configs
+
+
+le kernel lance sytemd qui monte la parititon qui avait ete faite a linstall. 
+
+
+sur le pc tous les binaire et config de notre os on ete compil a lavance. 

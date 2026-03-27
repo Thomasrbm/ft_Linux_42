@@ -1,0 +1,20 @@
+
+
+/lib
+
+
+
+boot
+ ↓
+kernel démarre
+ ↓
+seul "/" est monté (partition root minimale)
+"/usr" pas encore monté  ←── problème
+ ↓
+mais init, bash, ls ont besoin de libc...
+
+
+
+
+/lib      = les .so indispensables avant que /usr soit monté
+/usr/lib  = tout le reste, monté après par fstab

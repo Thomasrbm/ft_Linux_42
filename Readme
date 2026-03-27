@@ -1,0 +1,366 @@
+
+
+
+Construire sa distro de 0.
+
+
+Pour ca on need un compilateur. donc on part d une distro qui en a 1.  puis en supplente la distro.
+
+ca evite de bootstrap comme pour UNIX (avait pris des annees de faire leur compilo)
+
+=> ici but pas de refaire un pc de 0, juste installer un linux.
+(si pas assez de place en RAM : mount -o remount,size=2G /run/archiso/cowspace )  => car arch iso est full en RAM pour l install puis reboot sur le SDA
+
+
+
+
+----------------- SUR DISTRO CLASSIQUE
+
+
+ils ont choisit les paquets de bases
+
+compile les binaires
+
+configurer les defaults
+
+package le tout
+
+
+
+
+Bash ecrit en C. publier en tar.
+Ubuntu dl le tar.  le compil. cree un paquet .Debian
+
+publie sur le depot
+
+
+et nous on apt install
+
+
+
+
+
+le Kernel linux est le meme d origine mais chaque distro le patch un peu pour lui. 
+
+
+
+------------------  LFS
+
+on wget les tars.
+
+on extrait le code
+
+on config puis compil (make etc)  => on a les binaires
+
+
+
+
+
+
+on va aussi config nous meme le kernel linux.
+
+
+
+
+
+------------------ STEPS 
+
+
+Host Linux (VM Ubuntu/Debian)
+        ↓
+Ch.2 → Partitionner le disque (root + /boot + swap)
+        ↓
+Ch.3 → Télécharger tous les tarballs
+        ↓
+Ch.4 → Préparer l'environnement ($LFS, user lfs...)
+        ↓
+Ch.5 → Cross-toolchain (binutils + gcc + glibc isolés du host)
+        ↓
+Ch.6 → Compiler les utilitaires de base avec la cross-toolchain
+        ↓
+Ch.7 → chroot → tu entres dans ton futur système
+        ↓
+Ch.8 → Compiler TOUT le reste (~80 paquets)
+        ↓
+Ch.9 → Config système (fstab, hostname, réseau...)
+        ↓
+Ch.10 → Kernel + GRUB → vmlinuz-<ver>-throbert
+        ↓
+Boot sur ton LFS ✓
+
+
+
+
+
+
+CHAPITRE 1 
+
+0/  installer arch linux (la plus legere)
+
+
+
+
+
+
+
+0.1/  lancer le script bash de la page 2.2 (les minimum requis sur la distro de base pour lfs apres.)
+
+installe avec pacman -Sy les manquants
+
+
+
+
+
+
+
+
+CHAPITRE 2
+
+
+0.2/ paritiionner avec cfdisk /dev/sda
+
+lsblk pour check
+fdisk -l /dev/sda
+
+fomrtage et montage (fomrtage fait arranger les bit bryt en hierachie usable + montage permet d acceder aux parition depuis les dossier de la racine /mnt/lfs = /dev/sda)
+
+sans montage les octets existe mais sans chemin depuis la racine.
+
+0.3/ variable export LFS=/mnt/lfs
+
+sera use pour chemin(et donne dans les cmd du guide LFS)
+on va build la toolchain ici puis reboot avec et passer de arch a LFS
+
+
+
+
+
+
+
+CHAPITRE 3  installer wget + wget --input-file=/tmp/wget-list --continue --directory-prefix=$LFS/sources
+
+prend la list URL de LFS et la dl
+(tarr balls)
+
+https://www.linuxfromscratch.org/lfs/view/stable/chapter03/packages.html
+
+
+
+
+
+CHAPITRE 4  Creer l user LFS
+
+ 
+cree le dossier toolchain /mnt/lfs/tools
+
+
+lien symbolique avec ln -sv $LFS/tools /tools (tools au lieu du chemin entier va plus vite)
+
+
+cree user lfs pour pas compiller en root (sinon risque de casser a la moindre erreur)
+
+
+
+
+CHAPITRE 5 Cross compiller
+ 
+
+creer des tools (gcc etc )  pour lfs
+
+use le compiller de Arch pour compiller des tools qui dependeront de lfs et non de arch
+
+
+
+
+
+
+
+
+CHAPITRE 6 Cross toolchain
+
+
+
+
+outils temporaires dans $LFS (étape 6)
+bash, coreutils, grep, sed, tar...
+
+
+
+
+
+
+CHAPITRE 7  CHROOT
+
+
+avec les outils au dessus chroot
+
+
+
+
+change le root (la racine / )
+
+avant  /  = live iso ARCH en live
+
+
+/ = maintenant c'est /mnt/lfs
+
+
+
+# Depuis Arch
+ls /usr/bin/gcc  → /usr/bin/gcc d'Arch
+
+# Dans le chroot
+ls /usr/bin/gcc  → /mnt/lfs/usr/bin/gcc de LFS
+
+
+
+
+chapitre 8 → recompile TOUT depuis l'intérieur
+
+
+
+------------------------------------------------------------------------------------
+
+
+scp absolutepathsurpc root@ip_vm:/root/
+
+
+
+https://www.linuxfromscratch.org/blfs/view/svn/index.html    =>  Beyond linux from scratch 
+
+
+uname -r
+cat /proc/version
+
+
+ls /usr/src/
+
+
+
+lsblk
+cat /etc/fstab
+
+
+
+ls /usr/bin/udevadm
+udevadm --version
+lsmod
+
+
+systemctl --version
+ps aux | grep systemd
+
+
+
+vim --version | head -1
+
+
+ping -c 3 8.8.8.8
+curl -I http://google.com
+
+
+
+----- INSTALLER 
+
+wget 
+tar -xf 
+cd (fichier)
+./configure --prefix=/usr
+make
+make install
+
+bin --version
+
+
+
+
+
+
+
+
+==================== BONUS =========================
+
+
+
+
+Xorg =   faire du graphgique dans la distro
+
+dwn = n window manager fait par suckless.org. 
+
+
+st (Simple Terminal)
+
+
+xclock  = horloge graphique
+
+
+feh  = viewer di image leger. 
+
+
+
+lynx = bonus 
+
+
+
+
+
+========== Raccourcis ============
+
+
+-- st 
+
+
+alt shift  entrer  
+
+peut en ouvrir plusieurs
+
+
+
+alt shift c   = fermer un Terminal
+
+
+---- DWN
+
+ctrl alt  entre = plein ecran
+
+
+alt +  1   changer de fenetre
+
+alt +  1  + shift change la fenetre courrante de chiffre 
+
+
+
+
+---- xclock
+
+juste xclock dans la vm
+
+
+
+
+
+---- feh
+
+feh + img
+
+
+
+
+----- lynx 
+
+lynx + http : url .com
+
+
+==================== a chaque fois =========================
+
+
+
+wget le tar
+extrait
+Config
+make
+make install
+
+
+pk c est toujours pareil ? 
+

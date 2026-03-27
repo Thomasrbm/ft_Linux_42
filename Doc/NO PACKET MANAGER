@@ -1,0 +1,16 @@
+
+
+Un packet manager = apt, pacman etc  
+
+
+Logiciel qui automatise l installation de packet (binaire)
+
+
+il a une db en local avec les logiciel et leur repos en ligne
+capable d installer les dependances automatiquement.
+
+
+les createur de la distro on creer ce binaire evaluer les repo et mis a disposition du packet manager.
+
+
+LFS aucun car pas une distro
