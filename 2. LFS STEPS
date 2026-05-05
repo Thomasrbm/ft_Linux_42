@@ -844,19 +844,88 @@ liste des shells valide
 
 /etc/systemd/system.conf
 
+
 config le comportement de ce PID 1
 
 
 
-
-
-============================== 10 :  config kernel + compil kernel
-
-
+toutes les options en commented et fonctionnement par defaut 
+deja mis
 
 
 
 
 
 
-============================== 11 :  Grub 
+
+
+
+============================== 10 :  Grub 
+
+
+
+
+
+==============   10.2  Création du /etc/fstab (systemd le lira)
+
+
+
+dit au systeme quelles partition monter auto au boot 
+
+
+
+==============   10.3  compil du kernel
+
+
+
+
+1. make mrproper        → nettoyer les sources
+2. make menuconfig      → choisir les options du kernel
+3. make                 → compiler (long : 15-60 min selon ton CPU)
+4. make modules_install → installer les modules
++ copier les fichiers manuellement vers /boot
+
+
+
+
+
+
+==============  10.4 : Installation de GRUB
+
+
+
+
+fichier .efi sur la partition special FAT32
+
+
+
+
+grub-install /dev/sda --target=i386-pc
+
+
+/boot/grub/grub.cfg 
+
+
+set default=0
+set timeout=5
+
+insmod part_gpt
+insmod ext2
+
+
+# adapt selon le num de ton /boot
+
+set root=(hd0,1)
+
+set gfxpayload=1024x768x32
+
+
+# pour l entry dans le menu grub
+
+menuentry "LFS" {
+        linux   /vmlinuz-6.19.12-throbet root=/dev/sda2 ro
+}
+
+
+
+
