@@ -1,0 +1,862 @@
+
+
+
+
+============================== 2.2    Requirement host system
+
+
+
+8GB Ram. 4 core CPU
+
+
+script de check des software
+
+
+https://www.linuxfromscratch.org/lfs/view/stable/chapter02/hostreqs.html
+
+
+
+
+
+
+==============================  2.3 MEMOS
+
+
+si jamais on reboot on doit reactualiser tout. (mount, export etc)
+
+
+
+
+
+chap  1 a 4  : root
+
+
+
+
+export LFS=/mnt/lfs  (en root) 
+
+
+car les cmds sont privilege root
+
+
+pck on use  $LFS tout le long du projet pour aller plus vite
+
+
+root car on doit chown la partition a luser lfs 
+mkdir pour l user etc + creer l user
+
+
+
+
+
+
+
+chap 5 - 6  : user lfs 
+
+
+pour build depuis debian les truc vers lfs
+
+mount /dev/<ta_partition> /mnt/lfs (root)
+su - lfs (puis lfs)
+
+
+
+la c est  l user lfs qui bosse 
+
+
+car le bouquin dit que c est trop dangereux sinon
+
+si tu te trompe a ces etape tu peux casser des trucs
+
+
+etant user tu pourra pas faire de commande trop grave
+
+
+
+
+
+
+
+chap 7 - 10  : root  (need privilege chroot)
+
+
+
+export LFS=/mnt/lfs
+mount /dev/<ta_partition> $LFS
+
+# monter les virtual filesystems
+mount --bind /dev $LFS/dev
+mount -t devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
+mount -t proc proc $LFS/proc
+mount -t sysfs sysfs $LFS/sys
+mount -t tmpfs tmpfs $LFS/run
+
+# entrer dans le chroot
+chroot "$LFS" /usr/bin/env -i HOME=/root TERM="$TERM" \
+PS1='(lfs chroot) \u:\w\$ ' \
+PATH=/usr/bin:/usr/sbin /bin/bash --login
+
+
+
+
+
+==============================  2.4  Partition
+
+
+
+20gb pour lfs  et + (disons 30)
+
+
+
+root (le /),  /boot,  /swap
+
+
+LE TRUC OPTI
+
+[ LFS ][ swap? ][ Debian ]   ← état initial
+[ LFS ][ swap? ][ libre  ]   ← après suppression Debian
+[ LFS étendu  ][ libre  ]    ← après resize
+
+
+
+NOUS (trkl)
+
+
+
+fdisk (pour faire apres installation)
+
+
+lsblk
+sudo fdisk -l /dev/sda
+sudo cfdisk /dev/sda
+
+
+
+
+new
+Type →  Linux filesystem
+Write → tape yes
+
+sudo mkfs.ext4 /dev/sda3
+
+sudo e2label /dev/sda3 lfs
+
+
+
+
+
+
+
+
+
+==============================  2.5 FIle system on parition
+
+
+
+ext2 pour update rarement comme /boot  (pas de journal)
+
+
+ext3 generaliste (journal + recovery apres crash)
+
+
+ext4G  generaliste moderne   + perfs, fichiers jusqu'à 16 TB, timestamps ns)
+
+
+
+XFS  gros fichiers (videos)     rapide
+
+
+
+
+
+
+LFS reco du ext4  pour le root
+
+
+
+
+
+
+==============================  2.5 FIle system on parition
+
+
+
+set le umask (permission par defaut de fichier)
+
+
+
+et la variable lfs 
+
+
+
+
+umask 022
+export LFS=/mnt/lfs
+
+
+
+
+
+============================== 3.1 
+
+
+add sticky bit dans les dossier communs 
+
+
+$ ls -ld /tmp
+drwxrwxrwt  10 root root  4096 ...    /tmp
+            ↑              ↑
+            world-writable sticky bit
+
+
+
+chmod a+wt  (t pour sticky) = tout le monde peut ecrire 
+
+mais seul proprio peut rename et suppression
+
+
+root et lfs vont ecrire parfois meme truc extraire etc
+mais l un doit psa suppr truc de l autre 
+
+
+
+
+
+
+wget le tarball complet : wget-list-sysv 
+
+
+md5sums
+
+
+chown root:root $LFS/sources/*  car si extrait avec user debian
+
+UID sera debian et existera plus donc pb.
+
+
+
+
+
+============================== 4.2 
+
+
+creer le file system
+
+
+mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
+
+
+$LFS/etc
+$LFS/var
+$LFS/usr/bin
+$LFS/usr/lib
+$LFS/usr/sbin
+
+
+
+
+
+Crée des symlinks :
+
+for i in bin lib sbin; do
+  ln -sv usr/$i $LFS/$i
+done
+
+
+$LFS/bin  → usr/bin
+$LFS/lib  → usr/lib
+$LFS/sbin → usr/sbin
+
+
+
+
+(avant ete separer, mtn on link les deux)
+
+
+
+
+
+
+
+
+case $(uname -m) in
+  x86_64) mkdir -pv $LFS/lib64 ;;
+esac
+
+
+
+lib64 a les liens dynamiques
+
+
+dans chaque binaire c est hardcoded donc la on cree le bon 
+chemin pour les futur binaire avec le nom lfs
+
+chemin vers ler dynamic linker qui charge les .so pour les programe
+
+
+
+
+
+
+
+
+n dossier séparé pour le cross-compilateur
+
+mkdir -pv $LFS/tools
+
+
+
+
+============================== 4.3   lfs user 
+
+useradd -s /bin/bash -g lfs -m -k /dev/null lfs
+
+
+-s /bin/bash     =  bash the default shell 
+
+-g lfs           = lfs to group lfs. 
+
+
+-m               = lui cree un dossier home
+
+
+-k /etc/skel     =  /etc/skel c est rien donc pas de config de base
+                    sinon ca poluerais lfs avec truc debian
+
+/etc/skel
+
+(skull directory = dossier model dont le contenu est copie pour chaque
+new user)
+
+
+passwd lfs
+
+
+
+donner full acces au dir lfs : 
+
+chown -v lfs $LFS/{usr{,/*},var,etc,tools}
+case $(uname -m) in
+  x86_64) chown -v lfs $LFS/lib64 ;;
+esac
+
+
+
+
+
+
+============================== 4.4   Environnement setup
+
+
+
+(login shell)
+
+
+quand on fait su -   le shell lit  /etc/profile  puis  .bash_profile
+
+
+on config  ~/.bash_profile
+
+
+
+exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+
+
+
+l env remplace l ancien et garde juste le HOME, TERM et PS1
+
+
+
+
+
+
+
+
+
+
+
+
+ensuite ~/.bashrc   (non login shell)
+
+
+le umask 022
+LFS=/mnt/lfs
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu   =  lid cross compil dynamic linker
+PATH=$LFS/tools/bin:/usr/bin
+
+
+etc etc
+
+
+
+
+============================== 5  binutils + gcc pass 1
+
+
+micro gcc compil voir comment on cross compil + fait minimal
+
+
+
+
+===========   5.4 API Header  pour le kernel
+
+
+la glibc doit parler au kernel pour avoir les syscall les constantes
+
+O_RDONLY, struct stat, numéros de syscalls
+
+
+
+
+
+
+
+
+
+============================== 7   Entering Chroot and Building Additional Temporary Tools 
+
+
+
+================  7.2. Changing Ownership 
+
+
+tout ce qui est dans lfs appartient a lfs user
+
+
+
+
+pb du orphan UID. les fichier appartiennent a UID 1001. si user delete
+
+un mec plus tard peut venir etre UID 1001 et avoir tous les fichiers.
+
+
+
+
+
+sur debian on a creer lfs et on a compil avec lui
+/mnt/lfs/tools/, /mnt/lfs/usr/  sont a  LFS
+
+
+
+
+sur lfs cet user existe pas. on va pas le recrer la bas c etait juste
+un user de build
+
+
+les fichiers ont sont UID donc on doit tout redonner a ROOT
+
+
+
+
+chown --from lfs -R root:root $LFS/{usr,var,etc,tools}
+case $(uname -m) in
+  x86_64) chown --from lfs -R root:root $LFS/lib64 ;;
+esac
+
+
+
+
+
+
+
+
+
+
+================  7.3 Preparing Virtual Kernel File Systems
+
+
+
+
+
+chroot $LFS /bin/bash
+
+
+ouvre un shell dans /mnt/lfs et fait croire que cest le / 
+
+
+0
+
+
+les files comme  /dev, /proc, /sys, /run
+sont virtuel ils ne sont pas sur disque le kernel les met en memoire
+
+
+il faut les rendre visible pour $LFS
+
+
+
+
+/dev c est fichier de device = acces sda, null, tty
+
+/proc  intreface processus
+
+/sys   pour les drivers 
+
+/run pour donnes volatile au runtime 
+
+
+
+mkdir -pv $LFS/{dev,proc,sys,run}
+
+
+mount -v --bind /dev $LFS/dev
+commme dev est deja mounted on doit faire un bindmout pou lier 
+
+
+
+
+
+faut le faire car sinon les fs du kernel reste dans debian et
+ pas mounted dans le chroot
+
+
+
+================  7.4  chroot env
+
+
+-i sauf le home terminal, path et fmake flags
+
+
+sinon environnement propre
+
+
+
+
+
+================  7.5  creer kes durectires de bases
+
+
+
+symlinks etc 
+
+
+
+
+================  7.13  clean + backup 
+
+
+supprime doc, man etc car on va reinstalle des truc chap 8
+
+
+
+le chap 8 va ecraser les outils temp avec version definitive 
+
+
+
+
+
+
+exit du chroot pour la backup 
+
+
+
+
+unmount les virtuel de kernel 
+
+
+mountpoint -q $LFS/dev/shm && umount $LFS/dev/shm
+umount $LFS/dev/pts
+umount $LFS/{sys,proc,run,dev}
+
+
+
+
+
+
+
+
+on va dans la parition de lfs /mnt/lfs 
+
+tar -cJpf $HOME/lfs-temp-tools-12.4.tar.xz .
+
+
+on tar tout. 
+
+
+
+============================== 8 : build final de packet
+
+
+
+================ stripping  et debuuging symbol 8.83 8.84
+
+
+on a tout compil en -g pour ajouter des symbols debugs aux elf
+
+
+enleve les symboll avec cmd stripp et gagne place
+
+
+justifier car on debug rarement la libc
+
+
+
+
+================ Cleaning Up  8.85
+
+
+
+
+supprime les test mis dans le /tmp
+
+
+
+suppr les cross toolchain residuel etc 
+
+find /usr -depth -name $(uname -m)-lfs-linux-gnu\* | xargs rm -rf
+
+
+
+
+
+
+
+
+============================== 9  : systemd, hostname, reseau
+
+
+j ai fait sur systemd , lfs parle de System V
+
+
+
+
+=============== 9.2  reseau config 
+
+
+
+le .network dit a systemd comment config le reseau/interfaces
+, DHCP
+
+
+DHCP = attribue ip automaitique a la machine sur le reseau.
+
+
+
+
+ls /sys/class/net/
+enp0s3  lo
+
+
+
+
+
+
+
+
+fichier de config : 
+
+
+
+
+cat > /etc/systemd/network/10-eth-dhcp.network << "EOF"
+[Match]
+Name=enp0s3
+
+=> a quelle interface la config s applique
+
+
+[Network]
+DHCP=ipv4
+
+
+
+[DHCPv4]
+UseDomains=true  # resolution DNS
+EOF
+
+
+
+
+systemd lit : /etc/systemd/network/10-eth-dhcp.network
+
+
+
+
+
+
+=============== 9.3  Overview of Device and Module Handling 
+
+
+
+
+explications de la facon dont linux gerees les drivers (usb, disque, carte son)
+
+
+
+
+udev
+
+ 
+le /sys : exposes infos,  detection de drivers 
+
+
+le /dev  :  lit sysfs(file system) pour savoir ce qui existe,
+          cree des devices nodes (permission, owner)
+
+
+
+udevd (daemon) : cest le catcher de uevent (envoye par le kernel)
+              qui applique les modifs : il applique les modifs 
+
+
+
+
+
+
+=============== 9.4  managing devices
+
+
+les noms de devices dans le /dev est aleatoires et peut changer
+a chaque branchement et reboots 
+
+
+
+on peut creer des rules pour fixer les noms 
+
+
+(pas fait perso)
+
+
+
+
+
+
+
+=============== 9.5  horloge system  tout ls /etc (reste utile)
+
+
+
+
+
+difference entre la clock du pc hardware et l horloge systeme
+
+
+
+l heure de l os est gerer par le kernel (dans la memoire)
+init au RTC
+
+
+Real-Time Clock (puce carte mere qui garde heure meme pc eteint)
+
+Vbox gere tout seul ca 
+
+
+
+
+
+
+
+
+
+=============== 9.6  Configuring the Linux Console
+
+
+c est l affichage load au boot ou on voit login: 
+etc. 
+
+peut changer police et disposition claiver 
+
+
+
+
+
+
+
+
+
+
+
+===============  9.7 Configuring the System Locale 
+
+
+
+
+
+tout ces truc la vm le fait deja 
+
+
+
+
+langue, formate date heure monnaie etc.
+
+
+/etc/locale.conf : echo $LANG  var global pour la langue 
+
+
+r_FR.UTF-8
+
+
+
+
+
+=============== 9.8  Création de /etc/inputrc
+
+
+
+
+
+
+ce qui permet de se deplacer dans le terminal avec des fleches 
+debut fin avec home/end , delete etc.
+
+
+
+appuyer sur ces touche envoit \e[1~ ou \eOH selon le terminal utilisé
+
+
+pas standarsie donc 
+
+
+liste les different input selon les terminal et leur donne le 
+meme usage
+
+
+
+"\e[1~": beginning-of-line     # console Linux
+"\eOH":  beginning-of-line     # xterm
+"\e[H":  beginning-of-line     # Konsole
+"\e[7~": beginning-of-line     # rxvt
+
+
+
+
+=============== 9.9 Création de /etc/shells
+
+
+
+liste des shells valide 
+
+
+
+
+
+
+
+
+
+
+===============  9.10. Systemd Usage and Configuration 
+
+
+
+
+
+/etc/systemd/system.conf
+
+config le comportement de ce PID 1
+
+
+
+
+
+============================== 10 :  config kernel + compil kernel
+
+
+
+
+
+
+
+
+============================== 11 :  Grub 

@@ -39,7 +39,10 @@ va juste etre detruit peut a peut car pas fait pour autant d operation
 --------------  umask 022 (octal)
 
 
+Fichier créé → 666 - 022 = 644
 
+
+owner peut le lire/ecrire autre juste lire
 
 
 
