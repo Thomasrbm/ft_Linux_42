@@ -1,0 +1,77 @@
+
+
+-----------------------  problème du bootstrap.
+
+
+
+pour recompiller tout, il faut un compillateur. sinon marche pas
+
+
+
+Comment on a fait le premier OS ? 
+
+
+----------------------- Origin story
+
+0.  on trouait des carte perfores ou branchement de cables.
+
+
+1. ASM  on hardcode des instruction (telle suite binaire veut dire add = declanche le add dans cpu)
+
+
+des chiffres aux mots :  en gros on a juste dit ok tel clavier , 
+telle touche envoit telle suite de binaire qui affiche a, 
+et si le pc lit add sa se traduit en instruiction qui 
+declanche suite operaiton
+
+
+
+
+2. linker : code asm qui copie le binaire et les ajoute ensemble
+
+et recalcule la memoire pour les faire marcher ensemble
+
+
+
+3. Lexer / compilateur 
+
+Lexing (analyse lexicale)
+
+
+parse du texte pour le retransformer en instruction asembler
+
+Pour B * C, j'émets LOAD R1, B puis MUL R1, C
+
+
+en gros on reduit le nombre d instruction en donnant une equivalence plus simple a ecrire
+
+
+
+
+-------------------- Donc
+
+on veut pas repasser par ces etapes donc on part du bare minimum
+une distro avec compilateurs deja present.
+
+
+
+
+
+
+----------------------- BUILDING 
+
+
+soit on fait sda et sdb et on detache a la fin sda ou est le debian
+et on garde que sdb
+
+
+
+
+soit on paritionne une seul sd(a)
+
+
+et on resize apres le lfs sur la partie debian non utilise a la fin
+
+
+Pour se faire comme resize2fs s etend vers la droite 
+on doit mettre LFS sur la partie gauche et debian sur la droite

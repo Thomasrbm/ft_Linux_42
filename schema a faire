@@ -1,0 +1,19 @@
+Faire schéma pour :
+
+Understand dependencies — why does gcc need binutils? Why does glibc need the kernel headers first? When you build it yourself in the right order, you see these dependencies.
+
+Understand isolation — by building a toolchain that's separate from your host, you learn why systems need to be independent. You learn what "self-hosted" means.
+
+
+Understand compilation — most people never compile a kernel or glibc. Doing it forces you to understand flags, linking, ABI compatibility.
+
+
+
+
+
+
+Configuration files
+
+
+
+System structure 

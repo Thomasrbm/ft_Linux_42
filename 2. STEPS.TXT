@@ -1,0 +1,85 @@
+
+
+
+
+1/ debian (os linux) + partition ft linux 
+
+Donc soit partitioning 
+
+
+Soit sda sdb et tu keep le debian au début car packet manager. Ce que n as pas ft linux
+
+
+
+
+2/ créer la cross toolchain pour compiler
+
+
+Target sdb , on install tout là bas.
+
+
+Cross car va compiler ailleurs.
+
+Tu pourrais juste copier coller debian et partir de ça pour faire tes modifs
+
+
+En vrai ça a rien de new ou spécial juste tu reconpil binutils, GCC et glibc c est tout.
+
+
+Par exemple debian sort rarement donc ptet vieille glibc 2.36 nous 2.38 
+
+
+Donc cross car on va pas compil avec version 2.36 sinon on manquera de truc pour 2.38
+
+
+
+
+
+
+3/ compiler avec tes truc
+
+Compil bash, core utiles, grep
+
+
+
+
+
+
+
+
+4/ chroot
+
+On avait mounted les sda a des fichier pour interface. D' accès
+
+On met root dans sdb
+
+
+Change la racine pour dire mnt / LFS est le root
+
+
+Redirige cmd bash racine dans mnt  LFS 
+
+
+Unmount pour déco les deux 
+
+
+
+
+
+
+5/ confiture le system sur sdb
+
+
+
+
+
+
+
+6/ configuration de grub et met sur boot de sdb
+
+
+
+
+
+
+7/ on datche sda de la VMA et il dégage 

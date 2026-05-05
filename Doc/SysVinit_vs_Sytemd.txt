@@ -1,0 +1,144 @@
+
+--------------------- Processus et comment on en lance ----------------------------------------
+
+
+Bouton power -> cpu lance firmware a adresse fix (code constructeur)
+
+-> lance bootloader a adresse fix -> lance kernell en memory
+
+
+
+-> GDT et perms de programme, pagings etc
+
+-> userspace (pid 1) se lance par le kernel
+
+->  le kernel intercepte chaque action qui demande permission hardware se passe sur le pc, la traite et dit si possible
+
+-> puis la suite binaire se lance et laction se fait.
+
+
+
+->  un processus c est une page d adressage virtuel donc de la ram 
++ des signaux, un PID qui l id,   ==== programme en cours d exec
+wrapped avec son contexte
+ 
+
+
+
+
+
+POUR PID 1 le kernel cree tout le contexte de 0 et ca demande pas mal de ressources
+
+on fork pour juste tout copoer et rajouter que le petit contexte en plus
+pour le programme.
+
+
+POUR PID 1 le kernel cree tout le contexte de 0 et ca demande pas mal de ressources
+
+on fork pour juste tout copoer et rajouter que le petit contexte en plus
+pour le programme.
+
+
+--------------------------------------------------------------
+
+Systemes d init.   se sont les PID 1 
+
+
+
+
+Apres que le bootloader lance le kernel. 
+il faut lancer un processus qui lance tous les autres en cascade
+
+
+ssh, reseau, tty etc 
+
+
+
+
+cest systemd.
+
+
+
+
+il tourne en back de bout en bout.
+
+
+
+
+
+-------------------------------------------------------------
+
+
+Comment ca marche ? 
+
+
+
+fork() + exec(). comme tout processus sur un linux
+
+(zsh, Makefile qui lance gcc, etc.)
+
+
+
++ system de tracking par systemd 
+
+
+
+-------------------------------------------------------------
+
+
+
+
+
+
+------------------ SysVinit est l old legacy
+
+
+
+fait 1 par 1 sequentiellement, plus long
+
+
+
+
+
+
+
+sur ressources limite encore used (petite config)
+
+
+
+
+repris de System V de AT T Bell labs
+
+
+
+------------------ Systemd est le recent
+
+
+par red hat 2010
+
+
+parrallelise.
+
+
+
+start dans l ordre de depence
+
+
+
+centralise les logs dans journald
+
+
+
+
+
+
+redemarre auto les services crash
+
+
+
+
+
+
+
+
+

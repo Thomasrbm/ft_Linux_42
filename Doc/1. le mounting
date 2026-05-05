@@ -1,0 +1,36 @@
+
+
+
+le concepte de fichier = interface d acces pour les octets en gros ?
+
+
+
+-----------------------------
+
+
+
+sur un disk il n y a que des secteurs, qui des decoupages 
+d octets
+
+
+
+
+
+le filesystem apporte :
+
+- table d inodes 
+- mappages des blocs vides / occupied
+-  les bloc de donnes des fichiers
+
+
+
+inodes = permission, taille , type de fichier etc. (meta donnees)
+
+
+
+-------------------------------------
+
+
+
+Mounter c est rendre accessible via cette interface les donnes
+du disk

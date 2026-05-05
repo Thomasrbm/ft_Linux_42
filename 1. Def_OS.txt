@@ -1,0 +1,14 @@
+
+Un os c'est 
+
+Le kernel linux
+Le packet manager
+System init (systemd)
+Glibc avec binaires
+Boot loader
+File system
+Shell
+Permission system 
+Essentials utiles (tar, man etc.)
+Desktop manager environment 
+
