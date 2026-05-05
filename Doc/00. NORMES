@@ -1,0 +1,55 @@
+
+
+
+
+-------------- Norms FHS de file system
+
+
+car les bin qu on compil attendent des lib partage .so qui sont
+hardcoded a des endroits tres precis donc faut respecter les norme
+
+
+
+
+
+-------------- LSB  
+
+
+pour respecter les normes pour les jeux videos ou code 
+pour imprimantes etc .
+
+
+un peut contradictoire de configurer pour du code closed
+
+
+
+
+
+-------------- PAS DE SWAP SUR DU SSD
+
+
+
+car demande beacoup beacoup d operation et le ssd 
+va juste etre detruit peut a peut car pas fait pour autant d operation
+
+
+
+
+
+--------------  umask 022 (octal)
+
+
+
+
+
+
+
+
+
+--------------  SBU = unite de temps cross machine
+
+
+1 SBU = le temps pour compiller ton binutils
+
+
+apres tu sais relativement le temps que vont prendre chaque etapes

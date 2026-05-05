@@ -4,6 +4,10 @@
 le concepte de fichier = interface d acces pour les octets en gros ?
 
 
+vient du kernel, ext4 etc etc tous les open, read etc 
+
+
+
 
 -----------------------------
 

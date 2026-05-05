@@ -75,3 +75,13 @@ et on resize apres le lfs sur la partie debian non utilise a la fin
 
 Pour se faire comme resize2fs s etend vers la droite 
 on doit mettre LFS sur la partie gauche et debian sur la droite
+
+
+
+
+
+
+version 5.4 le kernel.  car sinon la glib va installer des truc en plus
+pour faire le pont avec vieux kernel.
+
+
