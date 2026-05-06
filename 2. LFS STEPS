@@ -12,6 +12,11 @@
 script de check des software
 
 
+donc ssh pour le copier coller (peut add le user ici finalement)
+vois etape 4.3
+
+
+
 https://www.linuxfromscratch.org/lfs/view/stable/chapter02/hostreqs.html
 
 
@@ -149,7 +154,10 @@ sudo e2label /dev/sda3 lfs
 
 
 
-==============================  2.5 FIle system on parition
+==============================  2.5 FIle system on parition FORMATAGE
+
+(se fait de base via VM)
+
 
 
 
@@ -171,6 +179,25 @@ XFS  gros fichiers (videos)     rapide
 
 
 LFS reco du ext4  pour le root
+
+
+
+ON FORMATE EN Ext4 
+
+
+cree un file system dessus (structure de fichier, racine etc)
+efface tout aussi.
+
+/sbin/mkfs.ext4 /dev/sda6
+
+
+
+
+lsblk -f
+
+
+
+
 
 
 
@@ -197,7 +224,7 @@ export LFS=/mnt/lfs
 
 
 
-============================== 3.1 
+============================== 3.1  WGET TO SKIP TO 4. d un coup
 
 
 add sticky bit dans les dossier communs 
@@ -221,6 +248,22 @@ mais l un doit psa suppr truc de l autre
 
 
 
+(changer selon la version de systemd)
+
+la liste : wget https://www.linuxfromscratch.org/lfs/downloads/13.0-systemd/wget-list
+wget --input-file=wget-list --continue
+
+
+
+
+le md5sum pour check si y a tout
+
+ wget https://www.linuxfromscratch.org/lfs/downloads/13.0-systemd/md5sums
+
+
+
+
+
 
 
 wget le tarball complet : wget-list-sysv 
@@ -237,10 +280,14 @@ UID sera debian et existera plus donc pb.
 
 
 
-============================== 4.2 
 
 
-creer le file system
+
+
+============================== 4.2  (usr deja fait mais details )
+
+
+creer le file system precisement dans lfs 
 
 
 mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
@@ -411,10 +458,112 @@ O_RDONLY, struct stat, numéros de syscalls
 
 
 
+on configure gcc avec pleins de disable 
+pareil pour binutils 
+
+
+
+https://www.linuxfromscratch.org/lfs/view/systemd/chapter05/gcc-pass1.html
+
+
+
+
+
+
+======================= POURQUOI LA PASS 1
+
+
+Binutils n est pas bcp degrade mais
+gcc oui 
+
+
+car gcc depends de la librairie c pour compiller en entier
+sauf qu il faut fcc pour la compiller
+
+donc on compille la partie de gcc stand alone
+on compille la libc avec 
+
+
+puis on recompille gcc en entier avec la libc dedans 
+
+
+
+
+
+======================= POURQUOI LA PASS 2 chroot
+
+
+pck on veut pas que la compilation viennent d hors lfs
+donc on recompil la pass 1 dans lfs
+
+
+
+======================= POURQUOI LA PASS 
+
+
+avoir la compilation  entiere 
+
+
+
+
+
+
+
 
 
 
 ============================== 7   Entering Chroot and Building Additional Temporary Tools 
+
+
+
+============= POURQUOI CHROOT  ? 
+
+
+
+
+
+le pb est qu il n y a que 1  seul   / (root)
+
+par os / vm meme si plusieurs sda/sdb  meme sur plusieur partition
+
+
+
+une seule racine pour tout le pc.
+
+
+
+donc monter dans le file system le lfs sur /mnt/lfs
+
+
+si on cd dedans le  /  du debut est celui de debian.
+
+
+
+
+
+donc on doit chroot pour lui dire ceci est le nouveau futur root. 
+le /mnt/linux deviendra a terme / 
+
+
+
+
+
+================   POURQUOI PASS 2
+
+
+
+compiler de racine de ubunutu grave des choses dans les binaire 
+qu on compilr, des traces, references, chemins.
+
+
+
+
+voir cmd :   gcc -print-search-dirs
+
+
+tout vient de la config  --prefix
+
+
 
 
 
@@ -524,7 +673,7 @@ sinon environnement propre
 
 
 
-================  7.5  creer kes durectires de bases
+================  7.5  creer les dir de bases
 
 
 
