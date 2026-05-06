@@ -728,6 +728,38 @@ on tar tout.
 
 
 
+
+
+=================   Classique workflow
+
+
+dans le /mnt/lfs/sources
+
+rendre dans un tar install.
+
+mkdir -v build
+../configure + flags \
+      flags \
+      etc. \
+
+
+
+check si tout est la + genere des header.
+
+
+
+make => compil
+
+make install +> met dans le bon dossier par rapport au prefix
+
+
+
+
+
+
+
+
+
 ================ stripping  et debuuging symbol 8.83 8.84
 
 

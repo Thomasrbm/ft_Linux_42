@@ -1,0 +1,29 @@
+
+
+
+
+1/ version kernel
+
+
+
+uname 
+
+uname -r
+
+uname  -m
+
+cat /proc/version
+
+
+
+4 /  Udev
+
+Udev (eudev)  fork de gentoo
+
+ps aux | grep udevd  
+
+
+
+
+===>  cest ce qui gere les peripherique monter sur /dev par le kernel cree des nodes d identification propre, charge les dependences , notifie les autres daemons
+
