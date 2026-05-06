@@ -1,5 +1,11 @@
 
 
+0/ 
+
+systemctl start sshd
+
+enable
+
 
 
 1/ version kernel
@@ -26,4 +32,219 @@ ps aux | grep udevd
 
 
 ===>  cest ce qui gere les peripherique monter sur /dev par le kernel cree des nodes d identification propre, charge les dependences , notifie les autres daemons
+
+
+
+https://www.linuxfromscratch.org/blfs/view/svn/index.html    =>  Beyond linux from scratch 
+
+
+uname -r
+cat /proc/version
+
+
+
+dmesg | head -1
+
+
+
+ls /usr/src/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+lsblk
+cat /etc/fstab
+
+
+
+
+
+
+
+
+ls /usr/bin/udevadm
+udevadm --version
+lsmod
+
+
+
+
+
+cat /boot/grub/grub.cfg
+
+
+
+
+systemctl --version
+ps aux | grep systemd
+
+
+
+
+
+
+vim --version | head -1
+
+
+ping -c 3 8.8.8.8
+curl -I http://google.com
+
+
+
+
+
+----- INSTALLER 
+
+wget 
+tar -xf 
+
+
+
+scp /sgoinfre/goinfre/Perso/throbert/ root@10.11.200.191:/root
+
+
+SI PK DE CONFIGURE : 
+
+../configure CFLAGS="-Wno-implicit-int -Wno-implicit-function-declaration -O2"
+
+
+
+cd (fichier)
+./configure --prefix=/usr
+make
+make install
+
+bin --version
+
+
+
+curl -v (si pk reseau)
+
+
+
+===================== MIRROR DE SECOURS
+
+
+EUROPEEN
+
+
+https://mirror.easyname.at/gnu/
+
+
+
+==================== BONUS =========================
+
+
+
+
+Xorg =   faire du graphgique dans la distro
+
+dwn = n window manager fait par suckless.org. 
+
+
+
+st (Simple Terminal)
+
+
+xclock  = horloge graphique
+
+
+feh  = viewer di image leger. 
+
+
+
+lynx = bonus 
+
+
+
+
+
+
+
+
+
+
+
+========== Raccourcis ============
+
+
+startx
+
+
+---- st   = ouvrir un terminal en raccourcis
+
+
+alt shift  entrer  
+
+
+peut en ouvrir plusieurs
+
+
+
+alt shift c   = fermer un Terminal
+
+
+
+
+
+---- DWN
+
+ctrl alt  entre = plein ecran
+
+
+alt +  1   changer de fenetre
+
+alt +  1  + shift change la fenetre courrante de chiffre 
+
+
+
+
+
+
+
+
+---- xclock
+
+juste xclock dans la vm
+
+
+
+
+
+
+
+---- feh
+
+feh + img
+
+
+
+
+
+
+----- lynx 
+
+lynx + http : url .com
+
+
+lynx info.cern.ch
+
+
+
+
+----- SORTIR 
+
+
+
+ctrl + shift + q 
 
