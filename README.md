@@ -10,6 +10,12 @@
 
 ---
 
+<p align="center"><i>LFS booting in Vbox — multi window, minimaliste GUI and web navigation</i></p>
+
+[Screencast from 05-13-2026 08:18:59 PM.webm](https://github.com/user-attachments/assets/adf5e4a8-9860-4958-87c4-220c52dce59c)
+
+---
+
 ## Table of contents
 1. [What is an OS](#what-is-an-os)
 2. [Build pipeline](#build-pipeline)
